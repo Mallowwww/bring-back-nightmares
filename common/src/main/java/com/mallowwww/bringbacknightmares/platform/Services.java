@@ -1,7 +1,7 @@
-package com.example.examplemod.platform;
+package com.mallowwww.bringbacknightmares.platform;
 
-import com.example.examplemod.Constants;
-import com.example.examplemod.platform.services.IPlatformHelper;
+import com.mallowwww.bringbacknightmares.Constants;
+import com.mallowwww.bringbacknightmares.platform.services.IPlatformHelper;
 
 import java.util.ServiceLoader;
 

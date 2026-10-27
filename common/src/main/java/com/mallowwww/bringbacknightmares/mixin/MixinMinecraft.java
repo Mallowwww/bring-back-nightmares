@@ -1,6 +1,6 @@
-package com.example.examplemod.mixin;
+package com.mallowwww.bringbacknightmares.mixin;
 
-import com.example.examplemod.Constants;
+import com.mallowwww.bringbacknightmares.Constants;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;

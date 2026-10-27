@@ -1,6 +1,6 @@
-package com.example.examplemod.platform;
+package com.mallowwww.bringbacknightmares.platform;
 
-import com.example.examplemod.platform.services.IPlatformHelper;
+import com.mallowwww.bringbacknightmares.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class FabricPlatformHelper implements IPlatformHelper {
