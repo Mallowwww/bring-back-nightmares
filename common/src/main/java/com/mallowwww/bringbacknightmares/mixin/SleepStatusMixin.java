@@ -1,6 +1,7 @@
 package com.mallowwww.bringbacknightmares.mixin;
 
 import com.mallowwww.bringbacknightmares.Constants;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.SleepStatus;
 import net.minecraft.world.entity.Entity;
@@ -15,6 +16,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Mixin(SleepStatus.class)
@@ -48,10 +50,21 @@ public abstract class SleepStatusMixin {
                         // Check if a mob from this position can path to the player
                         testZombie.teleportTo(checkPos.getX() + .5f, checkPos.getY(), checkPos.getZ() + .5f);
                         System.out.println("got here");
-                        var path = testZombie.getNavigation().createPath(pos.above(), 50);
-                        if (path != null)
-                            System.out.println("AAA - " + path);
-                        if (path == null || path.canReach()) {
+                        System.out.println(checkPos);
+                        Set<Direction> checkDirections = Set.of(
+                                Direction.EAST,
+                                Direction.WEST,
+                                Direction.NORTH,
+                                Direction.SOUTH
+                        );
+                        boolean flag = false;
+                        for (var d : checkDirections) {
+                            var path = testZombie.getNavigation().isStableDestination(pos.relative(d));
+
+                            if (path)
+                                flag = true;
+                        }
+                        if (!flag) {
                             testZombie.remove(Entity.RemovalReason.DISCARDED);
                             continue;
                         }
