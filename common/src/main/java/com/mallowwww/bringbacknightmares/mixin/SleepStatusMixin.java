@@ -31,7 +31,7 @@ public abstract class SleepStatusMixin {
             var level = player.level();
             var random = level.getRandom();
             var pos = player.blockPosition();
-            var radius = 10; // Range the mob will try to spawn in; means that a large well-lit area can be considered safe
+            var radius = 20; // Range the mob will try to spawn in; means that a large well-lit area can be considered safe
             for (int i = 0; i < 20; i++) { // 20 times for parity with beta; means there's a chance it misses a spot. Adds some grace.
                 int x = (int) (random.nextDouble() * radius * 2 - radius);
                 int z = (int) (random.nextDouble() * radius * 2 - radius);
@@ -41,16 +41,14 @@ public abstract class SleepStatusMixin {
                     level.addFreshEntity(testZombie);
                     var checkPos = pos.offset(x, y, z);
                     if (
-                            level.getBlockState(checkPos).is(Blocks.AIR)
-                            && level.getBlockState(checkPos.above()).is(Blocks.AIR)
+                            level.getBlockState(checkPos).getCollisionShape(level, checkPos).isEmpty()
+                            && level.getBlockState(checkPos.above()).getCollisionShape(level, checkPos.above()).isEmpty()
                             && level.getBlockState(checkPos.below()).entityCanStandOn(
                                     level, checkPos.below(), testZombie
                             )
                             && Zombie.isDarkEnoughToSpawn(level, checkPos, random)) {
                         // Check if a mob from this position can path to the player
                         testZombie.teleportTo(checkPos.getX() + .5f, checkPos.getY(), checkPos.getZ() + .5f);
-                        System.out.println("got here");
-                        System.out.println(checkPos);
                         Set<Direction> checkDirections = Set.of(
                                 Direction.EAST,
                                 Direction.WEST,
@@ -69,8 +67,9 @@ public abstract class SleepStatusMixin {
                             continue;
                         }
                         // do the funny
-                        testZombie.teleportTo(pos.getX() + .5f, pos.getY(), pos.getZ() + .5f);
+                        testZombie.teleportTo(pos.getX() + .5f, pos.getY() + .8f, pos.getZ() + .5f);
                         player.stopSleepInBed(true, true);
+                        testZombie.setTarget(player);
                         fail.set(true);
                         return false;
 
