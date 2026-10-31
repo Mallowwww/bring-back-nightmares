@@ -4,13 +4,16 @@ import com.mallowwww.bringbacknightmares.Constants;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.SleepStatus;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.monster.skeleton.Skeleton;
+import net.minecraft.world.entity.monster.spider.Spider;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -37,18 +40,18 @@ public abstract class SleepStatusMixin {
                 int z = (int) (random.nextDouble() * radius * 2 - radius);
                 for (int y = -radius; y < radius; y++) {
                     // Can a mob spawn here?
-                    var testZombie = new Zombie(level);
-                    level.addFreshEntity(testZombie);
+                    PathfinderMob spawnedMob = makeRandomMob(level);
+                    level.addFreshEntity(spawnedMob);
                     var checkPos = pos.offset(x, y, z);
                     if (
                             level.getBlockState(checkPos).getCollisionShape(level, checkPos).isEmpty()
                             && level.getBlockState(checkPos.above()).getCollisionShape(level, checkPos.above()).isEmpty()
                             && level.getBlockState(checkPos.below()).entityCanStandOn(
-                                    level, checkPos.below(), testZombie
+                                    level, checkPos.below(), spawnedMob
                             )
                             && Zombie.isDarkEnoughToSpawn(level, checkPos, random)) {
                         // Check if a mob from this position can path to the player
-                        testZombie.teleportTo(checkPos.getX() + .5f, checkPos.getY(), checkPos.getZ() + .5f);
+                        spawnedMob.teleportTo(checkPos.getX() + .5f, checkPos.getY(), checkPos.getZ() + .5f);
                         Set<Direction> checkDirections = Set.of(
                                 Direction.EAST,
                                 Direction.WEST,
@@ -57,24 +60,24 @@ public abstract class SleepStatusMixin {
                         );
                         boolean flag = false;
                         for (var d : checkDirections) {
-                            var path = testZombie.getNavigation().isStableDestination(pos.relative(d));
+                            var path = spawnedMob.getNavigation().isStableDestination(pos.relative(d));
 
                             if (path)
                                 flag = true;
                         }
                         if (!flag) {
-                            testZombie.remove(Entity.RemovalReason.DISCARDED);
+                            spawnedMob.remove(Entity.RemovalReason.DISCARDED);
                             continue;
                         }
                         // do the funny
-                        testZombie.teleportTo(pos.getX() + .5f, pos.getY() + .8f, pos.getZ() + .5f);
+                        spawnedMob.teleportTo(pos.getX() + .5f, pos.getY() + .8f, pos.getZ() + .5f);
                         player.stopSleepInBed(true, true);
-                        testZombie.setTarget(player);
+                        spawnedMob.setTarget(player);
                         fail.set(true);
                         return false;
 
                     } else {
-                        testZombie.remove(Entity.RemovalReason.DISCARDED);
+                        spawnedMob.remove(Entity.RemovalReason.DISCARDED);
                     }
                 }
             }
@@ -85,4 +88,17 @@ public abstract class SleepStatusMixin {
     }
     @Shadow
     public abstract int sleepersNeeded(int sleepPercentageNeeded);
+    @Unique
+    private static PathfinderMob makeRandomMob(Level level) {
+        var random = level.getRandom();
+        PathfinderMob entity;
+        float val = random.nextFloat();
+        if (val > .6f)
+            entity = new Zombie(EntityTypes.ZOMBIE, level);
+        else if (val > .2f)
+            entity = new Skeleton(EntityTypes.SKELETON, level);
+        else
+            entity = new Spider(EntityTypes.SPIDER, level);
+        return entity;
+    }
 }
