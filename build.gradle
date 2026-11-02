@@ -4,3 +4,11 @@ plugins {
     // see https://projects.neoforged.net/neoforged/moddevgradle for new versions
     id 'net.neoforged.moddev' version '2.0.147' apply false
 }
+
+repositories {
+    maven {
+        // Location of the maven that hosts Team Resourceful's jars.
+        name = "Team Resourceful Maven"
+        url = "https://maven.teamresourceful.com/repository/maven-public/"
+    }
+}

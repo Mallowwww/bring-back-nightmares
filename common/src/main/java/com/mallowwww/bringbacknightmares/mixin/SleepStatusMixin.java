@@ -1,6 +1,7 @@
 package com.mallowwww.bringbacknightmares.mixin;
 
 import com.mallowwww.bringbacknightmares.Constants;
+import com.mallowwww.bringbacknightmares.config.ModConfig;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.SleepStatus;
@@ -41,6 +42,7 @@ public abstract class SleepStatusMixin {
                 for (int y = -radius; y < radius; y++) {
                     // Can a mob spawn here?
                     PathfinderMob spawnedMob = makeRandomMob(level);
+                    if (spawnedMob == null) continue;
                     level.addFreshEntity(spawnedMob);
                     var checkPos = pos.offset(x, y, z);
                     if (
@@ -92,13 +94,21 @@ public abstract class SleepStatusMixin {
     private static PathfinderMob makeRandomMob(Level level) {
         var random = level.getRandom();
         PathfinderMob entity;
-        float val = random.nextFloat();
-        if (val > .6f)
-            entity = new Zombie(EntityTypes.ZOMBIE, level);
-        else if (val > .2f)
-            entity = new Skeleton(EntityTypes.SKELETON, level);
-        else
-            entity = new Spider(EntityTypes.SPIDER, level);
+//        float val = random.nextFloat();
+//        if (val > .6f)
+//            entity = new Zombie(EntityTypes.ZOMBIE, level);
+//        else if (val > .2f)
+//            entity = new Skeleton(EntityTypes.SKELETON, level);
+//        else
+//            entity = new Spider(EntityTypes.SPIDER, level);
+        if (ModConfig.ALLOWED_MOBS.length == 0) return null;
+        int val = random.nextIntBetweenInclusive(0, ModConfig.ALLOWED_MOBS.length - 1);
+        entity = switch(ModConfig.ALLOWED_MOBS[val]) {
+            case SPIDER -> new Spider(EntityTypes.SPIDER, level);
+            case ZOMBIE -> new Zombie(EntityTypes.ZOMBIE, level);
+            case SKELETON -> new Skeleton(EntityTypes.SKELETON, level);
+            case null -> new Skeleton(EntityTypes.SKELETON, level);
+        };
         return entity;
     }
 }
