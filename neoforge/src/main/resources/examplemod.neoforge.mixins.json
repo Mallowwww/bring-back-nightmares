@@ -5,7 +5,7 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "client": [
-    "MixinTitleScreen"
+    "com.mallowwww.bringbacknightmares.mixin.MixinTitleScreen"
   ],
   "server": [],
   "injectors": {

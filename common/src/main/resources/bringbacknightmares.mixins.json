@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.mallowwww.bringbacknightmares.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "BedBlockMixin",
+    "SleepStatusMixin"
+  ],
+  "client": [
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}
