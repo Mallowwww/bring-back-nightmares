@@ -10,6 +10,14 @@ dependencies {
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    modImplementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-fabric-1.21:3.0.11"
+}
+repositories {
+    maven {
+        // Location of the maven that hosts Team Resourceful's jars.
+        name = "Team Resourceful Maven"
+        url = "https://maven.teamresourceful.com/repository/maven-public/"
+    }
 }
 
 loom {
