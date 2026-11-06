@@ -22,7 +22,6 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -41,13 +40,9 @@ public abstract class BedBlockMixin extends HorizontalDirectionalBlock {
         super(properties);
     }
 
-    /**
-     * @author Mallow
-     * @reason I wanted to
-     */
     @Override
     @Overwrite
-    protected @Nonnull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
         BedPart part = state.getValue(PART);
         BlockState otherState = level.getBlockState(pos.relative(bringbacknightmares$getNeighbourDirection(part, state.getValue(FACING))));
