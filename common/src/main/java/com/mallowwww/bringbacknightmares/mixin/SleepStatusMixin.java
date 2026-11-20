@@ -30,6 +30,9 @@ public abstract class SleepStatusMixin {
         ci.cancel();
         AtomicBoolean fail = new AtomicBoolean(false);
         int deepSleepers = (int)players.stream().filter(Player::isSleepingLongEnough).filter(player -> {
+            // Don't bother with creative players
+            if (player.isCreative()) return true;
+
             // Check if the player is sleeping in an unsafe spot, and if so, kick them out of bed and spawn a mob in front of them
             // Also filter them from this list so they're not part of the calculation
             var level = player.level();

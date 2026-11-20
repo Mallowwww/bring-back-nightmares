@@ -1,12 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "com.example.examplemod.mixin",
+  "package": "com.mallowwww.bringbacknightmares.mixin",
   "refmap": "${mod_id}.refmap.json",
   "compatibilityLevel": "JAVA_21",
   "mixins": [],
   "client": [
-    "com.mallowwww.bringbacknightmares.mixin.MixinTitleScreen"
+    "MixinTitleScreen"
   ],
   "server": [],
   "injectors": {
