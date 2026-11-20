@@ -42,7 +42,7 @@ public abstract class BedBlockMixin extends HorizontalDirectionalBlock {
 
     @Override
     @Overwrite
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
         BedPart part = state.getValue(PART);
         BlockState otherState = level.getBlockState(pos.relative(bringbacknightmares$getNeighbourDirection(part, state.getValue(FACING))));

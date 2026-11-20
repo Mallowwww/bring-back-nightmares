@@ -33,6 +33,8 @@ public abstract class SleepStatusMixin {
             // Also filter them from this list so they're not part of the calculation
 //            var level = player.level();
             if (!(player.level() instanceof ServerLevel level)) return false;
+            // Creative players can't be attacked by mobs anyway
+            if (player.isCreative()) return true;
             var random = level.getRandom();
             var pos = player.blockPosition();
             var radius = 20; // Range the mob will try to spawn in; means that a large well-lit area can be considered safe
